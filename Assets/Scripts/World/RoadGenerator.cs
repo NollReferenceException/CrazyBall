@@ -15,7 +15,7 @@ public class RoadGenerator : MonoBehaviour, IRestartable
     private Vector3 _currentPosition;
     private Vector3 _generateStep;
     
-    private GemGenerator _gemGenerator;
+    [SerializeField] private GemGenerator gemGenerator;
 
     private List<GameObject> _allClusters;
 
@@ -36,7 +36,6 @@ public class RoadGenerator : MonoBehaviour, IRestartable
     {
         _currentPosition = Vector3.zero;
         _direction = Vector3.zero;
-        _gemGenerator = GeneratorsManagers.Instance.GemGenerator;
         _allClusters = new List<GameObject>();
     }
 
@@ -93,7 +92,7 @@ public class RoadGenerator : MonoBehaviour, IRestartable
 
             tilesCluster.GenerateCluster(clusterSize, _currentPosition, tile);
             
-            _gemGenerator.TryCreateGem(tilesCluster.CenterPlatform);
+            gemGenerator.TryCreateGem(tilesCluster.CenterPlatform);
 
             if (i == generateRange / 2)
             {
@@ -127,6 +126,9 @@ public class RoadGenerator : MonoBehaviour, IRestartable
         }
         
         Reset();
+        
+        gemGenerator.RestartThisObject();
+        
         GenerateRoad();
     }
 }

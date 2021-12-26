@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class GemGenerator : MonoBehaviour, IRestartable
 {
-    [SerializeField] private int gemGenerationPattern;
+    [SerializeField] private GenerationPattern gemGenerationPattern;
     [SerializeField] private int gemSpawnInterval;
     [SerializeField] private GameObject gem;
 
@@ -14,7 +14,7 @@ public class GemGenerator : MonoBehaviour, IRestartable
     private int _currentCluster;
     private int _currentBlockCluster;
     private int _targetPlatform;
-    
+
     private Vector3 _platformCenter;
 
     private List<GameObject> _allGems;
@@ -25,12 +25,12 @@ public class GemGenerator : MonoBehaviour, IRestartable
         Random
     }
 
-    
+
     private void Start()
     {
         Reset();
     }
-    
+
     void Reset()
     {
         _height = 0.7f;
@@ -44,7 +44,7 @@ public class GemGenerator : MonoBehaviour, IRestartable
     {
         _platformCenter = platformCenter;
 
-        switch (gemGenerationPattern)
+        switch ((int)gemGenerationPattern)
         {
             case (int) GenerationPattern.Orderly:
                 OrderlySpawning();

@@ -153,7 +153,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1261815133}
-  - {fileID: 776026080}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1088,8 +1087,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 39085451}
-  m_RootOrder: 1
+  m_Father: {fileID: 1261815133}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &776026081
 MonoBehaviour:
@@ -1628,7 +1627,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 776026080}
   m_Father: {fileID: 39085451}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1648,6 +1648,7 @@ MonoBehaviour:
   generateRange: 20
   clusterSize: 2
   startPlatformSize: 3
+  gemGenerator: {fileID: 776026081}
 --- !u!1 &1308765478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1740,7 +1741,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ArrayToRestart:
-  - {fileID: 776026078}
   - {fileID: 1261815131}
   - {fileID: 418901521}
   - {fileID: 963194225}
