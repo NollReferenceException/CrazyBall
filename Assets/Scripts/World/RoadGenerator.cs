@@ -25,7 +25,7 @@ public class RoadGenerator : MonoBehaviour
 
     private void Start()
     {
-        _gemGenerator = GameObject.Find("GemGenerator").GetComponent<GemGenerator>();
+        _gemGenerator = GeneratorsManagers.Instance.GemGenerator;
         
         GenerateRoad();
     }
