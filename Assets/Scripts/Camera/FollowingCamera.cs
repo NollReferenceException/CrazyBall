@@ -1,16 +1,19 @@
+using System;
 using UnityEngine;
 using System.Collections;
 
-public class FollowingCamera : MonoBehaviour
+public class FollowingCamera : MonoBehaviour, IRestartable
 {
     [SerializeField] private Transform followableObject;
 
     [SerializeField] private float smooth;
 
     private Vector3 _startingDistance;
+    private Vector3 startPosition;
 
     private void Start()
     {
+        startPosition = transform.position;
         _startingDistance = transform.position - followableObject.transform.position;
         gameObject.GetComponent<Camera>().transform.LookAt(followableObject);
     }
@@ -30,5 +33,10 @@ public class FollowingCamera : MonoBehaviour
         position = new Vector3(position.x, tempPositionY, position.z);
 
         transform.position = position;
+    }
+
+    public void RestartThisObject()
+    {
+        transform.position = startPosition;
     }
 }

@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using Random = UnityEngine.Random;
 
-public class RoadGenerator : MonoBehaviour
+public class RoadGenerator : MonoBehaviour, IRestartable
 {
     [SerializeField] private GameObject tile;
     [SerializeField] private int generateRange;
@@ -16,6 +17,8 @@ public class RoadGenerator : MonoBehaviour
     private Vector3 _generateStep;
     private GemGenerator _gemGenerator;
 
+    private List<GameObject> _allClusters;
+
 
     private enum DirectionVariant
     {
@@ -25,8 +28,7 @@ public class RoadGenerator : MonoBehaviour
 
     private void Start()
     {
-        _gemGenerator = GeneratorsManagers.Instance.GemGenerator;
-        
+        Reset();
         GenerateRoad();
     }
 
@@ -60,6 +62,8 @@ public class RoadGenerator : MonoBehaviour
             {
                 tilesCluster.SetRegenerateRoadTrigger();
             }
+            
+            _allClusters.Add(cluster);
         }
     }
     
@@ -69,6 +73,7 @@ public class RoadGenerator : MonoBehaviour
         TilesCluster startingTilesPlatform = startingPlatform.AddComponent<TilesCluster>();
 
         startingTilesPlatform.GenerateCluster(startPlatformSize, _currentPosition, tile);
+        _allClusters.Add(startingPlatform);
     }
 
     void GenerateFirstCluster()
@@ -79,6 +84,8 @@ public class RoadGenerator : MonoBehaviour
         _currentPosition += Vector3.Scale(_direction, _generateStep * startPlatformSize);
 
         firstTilesCluster.GenerateCluster(clusterSize, _currentPosition, tile);
+        _allClusters.Add(firstCluster);
+
     }
 
     void SwitchDirection()
@@ -102,5 +109,26 @@ public class RoadGenerator : MonoBehaviour
         Bounds tileBounds = tempTile.GetComponent<BoxCollider>().bounds;
         _generateStep = new Vector3(tileBounds.size.x, 0, tileBounds.size.z);
         Destroy(tempTile);
+    }
+
+
+    private void Reset()
+    {
+        _currentPosition = Vector3.zero;
+        _direction = Vector3.zero;
+        _gemGenerator = GeneratorsManagers.Instance.GemGenerator;
+        _allClusters = new List<GameObject>();
+    }
+
+    public void RestartThisObject()
+    {
+        foreach (var clusterToDestroy in _allClusters)
+        {
+            Destroy(clusterToDestroy);
+        }
+        
+        Reset();
+        
+        GenerateRoad();
     }
 }

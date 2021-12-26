@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class UIGameRoot : MonoBehaviour
+public class UIGameRoot : UIRoot
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private UIGameView gameView;
+    public UIGameView GameView => gameView;
+
+    public override void ShowRoot()
     {
-        
+        base.ShowRoot();
+
+        gameView.ShowView();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void HideRoot()
     {
-        
+        gameView.HideView();
+
+        base.HideRoot();
     }
 }

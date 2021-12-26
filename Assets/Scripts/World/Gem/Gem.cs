@@ -7,8 +7,10 @@ public class Gem : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Player>())
+        Player player = other.GetComponent<Player>();
+        if (player)
         {
+            player.PickUpGem();
             Destroy(gameObject);
         }
     }

@@ -1,18 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GameController : MonoBehaviour
+﻿
+public class GameController : BaseController<UIGameRoot>
 {
-    // Start is called before the first frame update
-    void Start()
+    private ScoreData _scoreData;
+    private Player _player;
+
+    private void Start()
     {
-        
+        _player = MainCharacters.Instance.Player;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ActivateController()
     {
+        _scoreData = new ScoreData();
+
+        _player.PickUpGemAction += ChangeScore;
+        _player.PlayerDead += LoseGame;
+
+        base.ActivateController();
+    }
+
+    public override void DeactivateController()
+    {
+        base.DeactivateController();
+
+        _player.PickUpGemAction -= ChangeScore;
+        _player.PlayerDead -= LoseGame;
+    }
+
+    private void LoseGame()
+    {
+        _scoreData.ZeroingScore();
+        uiElement.GameView.ShowScore(_scoreData);
         
+        root.ChangeController(RootController.ControllerTypeEnum.GameOver);
+    }
+
+    private void ChangeScore()
+    {
+        _scoreData.IncreaseScore();
+        uiElement.GameView.ShowScore(_scoreData);
     }
 }

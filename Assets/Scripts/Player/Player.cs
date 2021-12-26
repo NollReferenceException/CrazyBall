@@ -2,23 +2,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour , IRestartable
 {
     [SerializeField] private float moveSpeed;
 
     private Rigidbody _playerRb;
 
-    private Vector3 _moveDirection = Vector3.zero;
+    private Vector3 _moveDirection;
     private float _moveSpeedX;
     private float _moveSpeedZ;
-
     private bool _toRight;
+    
+    private Vector3 _startPosition;
+
+    public UnityAction PickUpGemAction { get; set; }
+    public UnityAction PlayerDead { get; set; }
 
     private void Start()
     {
-        _playerRb = GetComponent<Rigidbody>();
+        _startPosition = transform.position;
+        
+        Reset();
     }
 
     private void FixedUpdate()
@@ -37,6 +44,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         InputHandler();
+        PlayerCheck();
     }
 
     private void InputHandler()
@@ -57,5 +65,32 @@ public class Player : MonoBehaviour
         _moveSpeedZ = _moveDirection.z * moveSpeed;
     }
 
-    // Update is called once per frame
+    public void PickUpGem()
+    {
+        PickUpGemAction?.Invoke();
+    }
+
+    void PlayerCheck()
+    {
+        if (transform.position.y < -10)
+        {
+            gameObject.SetActive(false);
+            PlayerDead?.Invoke();
+        }
+    }
+
+    private void Reset()
+    {
+        _playerRb = GetComponent<Rigidbody>();
+        _moveDirection = Vector3.right;
+        _moveSpeedX = 0;
+        _moveSpeedZ = 0;
+        transform.position = _startPosition;
+    }
+
+    public void RestartThisObject()
+    {
+        Reset();
+        gameObject.SetActive(true);
+    }
 }

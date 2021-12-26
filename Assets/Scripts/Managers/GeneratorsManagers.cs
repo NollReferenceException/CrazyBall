@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GeneratorsManagers : MonoBehaviour
+public class GeneratorsManagers : Singleton<GeneratorsManagers>
 {
-    public static GeneratorsManagers Instance = null;
+    // public static GeneratorsManagers Instance = null;
     private RoadGenerator _roadGenerator;
     private GemGenerator _gemGenerator;
+    
     public RoadGenerator RoadGenerator
     {
         get
@@ -33,15 +34,15 @@ public class GeneratorsManagers : MonoBehaviour
         }
     }
     
-    void Start()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance == this)
-        {
-            Destroy(gameObject);
-        }
-    }
+    // void Start()
+    // {
+    //     if (Instance == null)
+    //     {
+    //         Instance = this;
+    //     }
+    //     else if (Instance == this)
+    //     {
+    //         Destroy(gameObject);
+    //     }
+    // }
 }

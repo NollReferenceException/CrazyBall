@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
+using TMPro;
 
-public class UIGameView : MonoBehaviour
+
+public class UIGameView : UIView
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private TextMeshProUGUI scoreLabel;
 
-    // Update is called once per frame
-    void Update()
+    public void ShowScore(ScoreData scoreData)
     {
-        
+        scoreLabel.text = scoreData.GameScore.ToString("N0");
     }
 }
