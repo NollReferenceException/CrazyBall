@@ -9,11 +9,11 @@ public class FollowingCamera : MonoBehaviour, IRestartable
     [SerializeField] private float smooth;
 
     private Vector3 _startingDistance;
-    private Vector3 startPosition;
+    private Vector3 _startPosition;
 
     private void Start()
     {
-        startPosition = transform.position;
+        _startPosition = transform.position;
         _startingDistance = transform.position - followableObject.transform.position;
         gameObject.GetComponent<Camera>().transform.LookAt(followableObject);
     }
@@ -37,6 +37,6 @@ public class FollowingCamera : MonoBehaviour, IRestartable
 
     public void RestartThisObject()
     {
-        transform.position = startPosition;
+        transform.position = _startPosition;
     }
 }

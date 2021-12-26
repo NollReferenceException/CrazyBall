@@ -5,46 +5,18 @@ using UnityEngine;
 
 public class TilesCluster : MonoBehaviour
 {
-    private Vector3 Position
-    {
-        get { return _position; }
-    }
+    public Vector3 CenterPlatform => _centerPlatform;
 
-    public Vector3 ClusterSize
-    {
-        get { return _clusterSize; }
-    }
-
-    public Vector3 CenterPlatform
-    {
-        get { return _centerPlatform; }
-    }
-
-    private Vector3 _clusterSize;
     private Vector3 _position;
-
-    private GameObject _partCluster;
     private Vector3 _tileSize;
-    private Bounds _tileBounds;
-    private GameObject[] _tilesArray;
-    private bool triggerCluster;
-    private Vector3 _targetPosition;
     private Vector3 _centerPlatform;
 
-    public Vector3 GetClusterSize()
-    {
-        return Vector3.one;
-    }
+    private Bounds _tileBounds;
 
-    private void Start()
-    {
-        // _partCluster = test;
-        // GetTileBounds();
-        // _tileSize = _tileBounds.size;
-        // GenerateCluster(3, new Vector3(20, 35, 50));
-        // GetClusterCenter();
-        // Callibration();
-    }
+    private GameObject[] _tilesArray;
+    private GameObject _partCluster;
+
+    private bool _triggerCluster;
 
     void GetTileBounds()
     {
@@ -59,7 +31,6 @@ public class TilesCluster : MonoBehaviour
         GetTileBounds();
 
         _tilesArray = new GameObject[size * size];
-        _targetPosition = position;
 
         int index = 0;
 
@@ -78,7 +49,6 @@ public class TilesCluster : MonoBehaviour
         }
 
         GetPlatformCenter();
-        // Callibration();
     }
 
     public void SetRegenerateRoadTrigger()
@@ -94,8 +64,6 @@ public class TilesCluster : MonoBehaviour
     private void GetPlatformCenter()
     {
         Bounds firstBounds = _tilesArray[0].GetComponent<Collider>().bounds;
-
-        Vector3 worldSpaceMax = transform.TransformPoint(firstBounds.max);
 
         float maxX = firstBounds.max.x;
         float minX = firstBounds.min.x;
@@ -132,8 +100,6 @@ public class TilesCluster : MonoBehaviour
         float centerZ = maxZ - ((maxZ - minZ) / 2);
 
         Vector3 centerPlatform = new Vector3(centerX, maxY, centerZ);
-
-        _clusterSize = new Vector3(maxX - minX, firstBounds.size.y, maxZ - minZ);
 
         _centerPlatform = centerPlatform;
     }

@@ -4,15 +4,15 @@ public class GameController : BaseController<UIGameRoot>
     private ScoreData _scoreData;
     private Player _player;
 
-    private void Start()
-    {
-        _player = MainCharacters.Instance.Player;
-    }
-
     public override void ActivateController()
     {
         _scoreData = new ScoreData();
 
+        if (_player == null)
+        {
+            _player = MainCharacters.Instance.Player;
+        }
+        
         _player.PickUpGemAction += ChangeScore;
         _player.PlayerDead += LoseGame;
 
@@ -23,6 +23,11 @@ public class GameController : BaseController<UIGameRoot>
     {
         base.DeactivateController();
 
+        if (_player == null)
+        {
+            _player = MainCharacters.Instance.Player;
+        }
+        
         _player.PickUpGemAction -= ChangeScore;
         _player.PlayerDead -= LoseGame;
     }

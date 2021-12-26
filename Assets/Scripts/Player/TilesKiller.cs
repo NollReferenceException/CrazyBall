@@ -7,6 +7,7 @@ public class TilesKiller : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         Tile tile = other.GetComponent<Tile>();
+        Gem gem = other.GetComponent<Gem>();
 
         float destroyDistance = 3f;
 
@@ -18,6 +19,11 @@ public class TilesKiller : MonoBehaviour
             if (tile != null)
             {
                 tile.Fall();
+            }
+
+            if (gem != null)
+            {
+                Destroy(other.gameObject);
             }
         }
     }

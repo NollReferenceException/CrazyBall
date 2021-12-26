@@ -18,7 +18,6 @@ public class Player : MonoBehaviour, IRestartable
     private float _moveSpeedZ;
     private bool _toRight;
 
-
     public UnityAction PickUpGemAction { get; set; }
     public UnityAction PlayerDead { get; set; }
 
