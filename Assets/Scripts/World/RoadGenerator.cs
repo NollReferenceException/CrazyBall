@@ -6,13 +6,15 @@ using Random = UnityEngine.Random;
 
 public class RoadGenerator : MonoBehaviour
 {
-    public GameObject tile;
-    public int generateRange;
-    public int clusterSize;
-    public int startPlatformSize;
+    [SerializeField] private GameObject tile;
+    [SerializeField] private int generateRange;
+    [SerializeField] private int clusterSize;
+    [SerializeField] private int startPlatformSize;
+
     Vector3 _direction = Vector3.zero;
     Vector3 _currentPosition = Vector3.zero;
     private Vector3 _generateStep;
+    private GemGenerator _gemGenerator;
 
 
     private enum DirectionVariant
@@ -23,6 +25,8 @@ public class RoadGenerator : MonoBehaviour
 
     private void Start()
     {
+        _gemGenerator = GameObject.Find("GemGenerator").GetComponent<GemGenerator>();
+        
         GenerateRoad();
     }
 
@@ -34,29 +38,31 @@ public class RoadGenerator : MonoBehaviour
         SwitchDirection();
         GenerateFirstCluster();
 
-        GenerateClusters(generateRange);
+        GenerateClusters();
     }
 
-    public void GenerateClusters(int clustersCount)
+    public void GenerateClusters()
     {
-        for (int i = 0; i < clustersCount; i++)
+        for (int i = 0; i < generateRange; i++)
         {
             SwitchDirection();
-
+            
             _currentPosition += Vector3.Scale(_direction, _generateStep * clusterSize);
 
             GameObject cluster = new GameObject("Cluster");
             TilesCluster tilesCluster = cluster.AddComponent<TilesCluster>();
 
             tilesCluster.GenerateCluster(clusterSize, _currentPosition, tile);
+            
+            _gemGenerator.TryCreateGem(tilesCluster.CenterPlatform);
 
-            if (i == clustersCount / 2)
+            if (i == generateRange / 2)
             {
                 tilesCluster.SetRegenerateRoadTrigger();
             }
         }
     }
-
+    
     void GenerateStartingPlatform()
     {
         GameObject startingPlatform = new GameObject("Starting Platform");

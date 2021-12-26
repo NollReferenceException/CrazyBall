@@ -15,6 +15,11 @@ public class TilesCluster : MonoBehaviour
         get { return _clusterSize; }
     }
 
+    public Vector3 CenterPlatform
+    {
+        get { return _centerPlatform; }
+    }
+
     private Vector3 _clusterSize;
     private Vector3 _position;
 
@@ -24,7 +29,7 @@ public class TilesCluster : MonoBehaviour
     private GameObject[] _tilesArray;
     private bool triggerCluster;
     private Vector3 _targetPosition;
-    private Vector3 _center;
+    private Vector3 _centerPlatform;
 
     public Vector3 GetClusterSize()
     {
@@ -72,29 +77,31 @@ public class TilesCluster : MonoBehaviour
             }
         }
 
-        GetClusterCenter();
+        GetPlatformCenter();
         // Callibration();
     }
 
     public void SetRegenerateRoadTrigger()
     {
         gameObject.name = "Trigger Cluster";
-        
+
         for (int i = 0; i < _tilesArray.Length; i++)
         {
             _tilesArray[i].GetComponent<Tile>().TriggerTile = true;
         }
     }
 
-    private void GetClusterCenter()
+    private void GetPlatformCenter()
     {
         Bounds firstBounds = _tilesArray[0].GetComponent<Collider>().bounds;
+
+        Vector3 worldSpaceMax = transform.TransformPoint(firstBounds.max);
 
         float maxX = firstBounds.max.x;
         float minX = firstBounds.min.x;
         float maxZ = firstBounds.max.z;
         float minZ = firstBounds.min.z;
-        float centerY = firstBounds.center.y;
+        float maxY = firstBounds.max.y;
 
         for (int i = 0; i < _tilesArray.Length; i++)
         {
@@ -121,13 +128,13 @@ public class TilesCluster : MonoBehaviour
             }
         }
 
-        float centerX = maxX - minX / 2;
-        float centerZ = maxZ - minZ / 2;
+        float centerX = maxX - ((maxX - minX) / 2);
+        float centerZ = maxZ - ((maxZ - minZ) / 2);
 
-        Vector3 center = new Vector3(centerX, centerY, centerZ);
+        Vector3 centerPlatform = new Vector3(centerX, maxY, centerZ);
 
         _clusterSize = new Vector3(maxX - minX, firstBounds.size.y, maxZ - minZ);
 
-        _center = center;
+        _centerPlatform = centerPlatform;
     }
 }

@@ -43,7 +43,7 @@ public class Tile : MonoBehaviour
         {
             RoadGenerator
                 roadGenerator = GameObject.Find("RoadGenerator").GetComponent<RoadGenerator>(); //исправить костыль
-            roadGenerator.GenerateClusters(20);
+            roadGenerator.GenerateClusters();
         }
     }
 }

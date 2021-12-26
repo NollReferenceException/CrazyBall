@@ -832,6 +832,7 @@ MonoBehaviour:
   generateRange: 50
   clusterSize: 2
   startPlatformSize: 3
+  gemSpawnInterval: 5
 --- !u!4 &1261815133
 Transform:
   m_ObjectHideFlags: 0
