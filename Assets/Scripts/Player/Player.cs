@@ -5,27 +5,38 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-public class Player : MonoBehaviour , IRestartable
+public class Player : MonoBehaviour, IRestartable
 {
     [SerializeField] private float moveSpeed;
 
     private Rigidbody _playerRb;
 
     private Vector3 _moveDirection;
+    private Vector3 _startPosition;
+    
     private float _moveSpeedX;
     private float _moveSpeedZ;
     private bool _toRight;
-    
-    private Vector3 _startPosition;
+
 
     public UnityAction PickUpGemAction { get; set; }
     public UnityAction PlayerDead { get; set; }
 
+    
     private void Start()
     {
         _startPosition = transform.position;
-        
+
         Reset();
+    }
+
+    private void Reset()
+    {
+        _playerRb = GetComponent<Rigidbody>();
+        _moveDirection = Vector3.right;
+        _moveSpeedX = 0;
+        _moveSpeedZ = 0;
+        transform.position = _startPosition;
     }
 
     private void FixedUpdate()
@@ -55,6 +66,15 @@ public class Player : MonoBehaviour , IRestartable
         }
     }
 
+    void PlayerCheck()
+    {
+        if (transform.position.y < -10)
+        {
+            gameObject.SetActive(false);
+            PlayerDead?.Invoke();
+        }
+    }
+
     private void ChangeDirection()
     {
         _toRight = !_toRight;
@@ -69,25 +89,7 @@ public class Player : MonoBehaviour , IRestartable
     {
         PickUpGemAction?.Invoke();
     }
-
-    void PlayerCheck()
-    {
-        if (transform.position.y < -10)
-        {
-            gameObject.SetActive(false);
-            PlayerDead?.Invoke();
-        }
-    }
-
-    private void Reset()
-    {
-        _playerRb = GetComponent<Rigidbody>();
-        _moveDirection = Vector3.right;
-        _moveSpeedX = 0;
-        _moveSpeedZ = 0;
-        transform.position = _startPosition;
-    }
-
+    
     public void RestartThisObject()
     {
         Reset();

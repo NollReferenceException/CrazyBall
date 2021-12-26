@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using Random = UnityEngine.Random;
 
 public class GemGenerator : MonoBehaviour, IRestartable
@@ -11,11 +10,12 @@ public class GemGenerator : MonoBehaviour, IRestartable
     [SerializeField] private int gemSpawnInterval;
     [SerializeField] private GameObject gem;
 
-    private float _height = 0.7f;
-    private int _currentCluster = 0;
-    private int _currentBlockCluster = 0;
-    private Vector3 _platformCenter;
+    private float _height;
+    private int _currentCluster;
+    private int _currentBlockCluster;
     private int _targetPlatform;
+    
+    private Vector3 _platformCenter;
 
     private List<GameObject> _allGems;
 
@@ -25,9 +25,19 @@ public class GemGenerator : MonoBehaviour, IRestartable
         Random
     }
 
+    
     private void Start()
     {
         Reset();
+    }
+    
+    void Reset()
+    {
+        _height = 0.7f;
+        _currentCluster = 0;
+        _currentBlockCluster = 0;
+        _targetPlatform = Random.Range(0, gemSpawnInterval);
+        _allGems = new List<GameObject>();
     }
 
     public void TryCreateGem(Vector3 platformCenter)
@@ -86,15 +96,6 @@ public class GemGenerator : MonoBehaviour, IRestartable
                 _currentBlockCluster = 0;
             }
         }
-    }
-
-    void Reset()
-    {
-        _height = 0.7f;
-        _currentCluster = 0;
-        _currentBlockCluster = 0;
-        _targetPlatform = Random.Range(0, gemSpawnInterval);
-        _allGems = new List<GameObject>();
     }
 
     void SpawnGem()

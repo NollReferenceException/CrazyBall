@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using Random = UnityEngine.Random;
 
 public class RoadGenerator : MonoBehaviour, IRestartable
@@ -12,14 +11,15 @@ public class RoadGenerator : MonoBehaviour, IRestartable
     [SerializeField] private int clusterSize;
     [SerializeField] private int startPlatformSize;
 
-    Vector3 _direction = Vector3.zero;
-    Vector3 _currentPosition = Vector3.zero;
+    private Vector3 _direction;
+    private Vector3 _currentPosition;
     private Vector3 _generateStep;
+    
     private GemGenerator _gemGenerator;
 
     private List<GameObject> _allClusters;
 
-
+    
     private enum DirectionVariant
     {
         Forward,
@@ -31,6 +31,14 @@ public class RoadGenerator : MonoBehaviour, IRestartable
         Reset();
         GenerateRoad();
     }
+    
+    private void Reset()
+    {
+        _currentPosition = Vector3.zero;
+        _direction = Vector3.zero;
+        _gemGenerator = GeneratorsManagers.Instance.GemGenerator;
+        _allClusters = new List<GameObject>();
+    }
 
     private void GenerateRoad()
     {
@@ -41,6 +49,35 @@ public class RoadGenerator : MonoBehaviour, IRestartable
         GenerateFirstCluster();
 
         GenerateClusters();
+    }
+    
+    void GetGenerateStep()
+    {
+        GameObject tempTile = Instantiate(tile, Vector3.up * 1000.0f, Quaternion.identity);
+        Bounds tileBounds = tempTile.GetComponent<BoxCollider>().bounds;
+        _generateStep = new Vector3(tileBounds.size.x, 0, tileBounds.size.z);
+        Destroy(tempTile);
+    }
+    
+    void GenerateStartingPlatform()
+    {
+        GameObject startingPlatform = new GameObject("Starting Platform");
+        TilesCluster startingTilesPlatform = startingPlatform.AddComponent<TilesCluster>();
+
+        startingTilesPlatform.GenerateCluster(startPlatformSize, _currentPosition, tile);
+        _allClusters.Add(startingPlatform);
+    }
+    
+    void GenerateFirstCluster()
+    {
+        GameObject firstCluster = new GameObject("First Cluster");
+        TilesCluster firstTilesCluster = firstCluster.AddComponent<TilesCluster>();
+
+        _currentPosition += Vector3.Scale(_direction, _generateStep * startPlatformSize);
+
+        firstTilesCluster.GenerateCluster(clusterSize, _currentPosition, tile);
+        _allClusters.Add(firstCluster);
+
     }
 
     public void GenerateClusters()
@@ -66,27 +103,6 @@ public class RoadGenerator : MonoBehaviour, IRestartable
             _allClusters.Add(cluster);
         }
     }
-    
-    void GenerateStartingPlatform()
-    {
-        GameObject startingPlatform = new GameObject("Starting Platform");
-        TilesCluster startingTilesPlatform = startingPlatform.AddComponent<TilesCluster>();
-
-        startingTilesPlatform.GenerateCluster(startPlatformSize, _currentPosition, tile);
-        _allClusters.Add(startingPlatform);
-    }
-
-    void GenerateFirstCluster()
-    {
-        GameObject firstCluster = new GameObject("First Cluster");
-        TilesCluster firstTilesCluster = firstCluster.AddComponent<TilesCluster>();
-
-        _currentPosition += Vector3.Scale(_direction, _generateStep * startPlatformSize);
-
-        firstTilesCluster.GenerateCluster(clusterSize, _currentPosition, tile);
-        _allClusters.Add(firstCluster);
-
-    }
 
     void SwitchDirection()
     {
@@ -102,24 +118,7 @@ public class RoadGenerator : MonoBehaviour, IRestartable
                 break;
         }
     }
-
-    void GetGenerateStep()
-    {
-        GameObject tempTile = Instantiate(tile, Vector3.up * 1000.0f, Quaternion.identity);
-        Bounds tileBounds = tempTile.GetComponent<BoxCollider>().bounds;
-        _generateStep = new Vector3(tileBounds.size.x, 0, tileBounds.size.z);
-        Destroy(tempTile);
-    }
-
-
-    private void Reset()
-    {
-        _currentPosition = Vector3.zero;
-        _direction = Vector3.zero;
-        _gemGenerator = GeneratorsManagers.Instance.GemGenerator;
-        _allClusters = new List<GameObject>();
-    }
-
+    
     public void RestartThisObject()
     {
         foreach (var clusterToDestroy in _allClusters)
@@ -128,7 +127,6 @@ public class RoadGenerator : MonoBehaviour, IRestartable
         }
         
         Reset();
-        
         GenerateRoad();
     }
 }
